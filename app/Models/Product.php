@@ -14,7 +14,9 @@ class Product extends Model
 
     public $entity = "product";
 
-    public $filters = ["name",/*  "category" */];
+    public $filters = ["name"];
+
+    public $relationFilters = true;
 
     protected $fillable = [
         'name',

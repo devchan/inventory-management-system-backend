@@ -8,15 +8,15 @@ use Illuminate\Support\Collection;
 
 class BaseRepository implements BaseRepositoryInterface
 {
-    /**      
-     * @var Model      
+    /**
+     * @var Model
      */
     protected $model;
 
-    /**      
-     * BaseRepository constructor.      
-     *      
-     * @param Model $model      
+    /**
+     * BaseRepository constructor.
+     *
+     * @param Model $model
      */
     public function __construct(Model $model)
     {
@@ -83,9 +83,14 @@ class BaseRepository implements BaseRepositoryInterface
         if ($search && $search != 'null') {
             $searchQuery = $searchQuery->where(function ($query) use ($search) {
                 foreach ($this->model->filters as $filter) {
-                    $query = $query->orWhere($filter, 'like', $search . '%');
+                    $query = $query->orWhere($filter, 'like', '%' . $search . '%');
                 }
                 return $query;
+            })
+            ->when($this->model->relationFilters, function ($query) use ($search){
+                return $query->orWhereRelation('category', function ($query) use ($search){
+                    return $query->where("name", 'like', '%' . $search . '%');
+                });
             });
         }
         if ($this->model->orderBy) {

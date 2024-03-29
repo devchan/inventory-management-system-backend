@@ -23,6 +23,6 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
      */
     public function index()
     {
-        return $this->paginate($this->model);
+        return $this->paginate($this->model->has('category'));
     }
 }
